@@ -1,0 +1,131 @@
+{% extends 'en/base.html' %}
+{% load templatetags %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta name="description" content="Fallout 76 Calendar | FED76">
+    <link rel="stylesheet" type="text/css" href="{% static 'en/calendar/style.css' %}">
+    {% block title %}<title>Calendar76</title>{% endblock %}
+</head>
+
+<div class="container px-0">
+  <div class="row" style="max-width: 100%;">
+    <div class="col-12 card mb-4 mt-3 left top">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mx-auto">
+            <div class="row">
+              <div class="col p-0">
+
+                <div class="container-fluid dcenter">
+                    <div class="row">
+                        <div class='col'>
+                            <img src="{% static 'season33.png' %}" class='img-fluid rounded' style='border: 2px; border-style: solid; border-color: #c7974b;'></img>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid my-3">
+                    <div class='row rounded'>
+
+                        {% if today.season %}
+                        <div class='col-5 header' onclick=loadmodal(this) context="{{ modal.season }}" headerContext="{{today.season.name}} {{today.season.title}}" style='border: 2px; border-style: solid; border-color: #c7974b;'>
+                            <div>
+                                <b>Today:</b> {{today.date.1}}/{{today.date.2}}<br>
+                                <b>Expected level:</b> {{ today.level}}<br>
+                                <b>Current season:</b> {{today.season.name}}&nbsp{{today.season.title}}
+                        {%else%}
+                        <div class='col-5 header' style='border: 2px; border-style: solid; border-color: #c7974b;'>
+                            <div>
+                            {% if today.next_season %}
+                                <b>Currently awaiting </b><br> {{ today.next_season}}<br>
+                                {% if today.days_to_next_season == 1 %}
+                                <b> {{today.days_to_next_season}} </b> day left
+                                {% else %}
+                                <b> {{today.days_to_next_season}} </b> days left
+                                {% endif %}
+                            {%else%}
+                                <b>TBD</b>
+                            {%endif%}
+                        {%endif%}
+                            </div>
+                        </div>
+
+                        <div class='col-2 dcenter rounded'>
+                            <button class="btn btn-primary btn-lg header" type="button" id="backwardButton" style="background-color:#c7974b;">☝️</button>
+                        </div>
+
+                        {%if today.events %}
+                        <div class='col-5 header' onclick=loadmodal(this) context="{{ modal.events }}" headerContext="{{today.date.0}}" style='border: 2px; border-style: solid; border-color: #c7974b;'>
+                        {%else%}
+                        <div class='col-5 header' style='border: 2px; border-style: solid; border-color: #c7974b;'>
+                        {%endif%}
+                            <div>
+                                <b>Today events:</b><br> {% for event in today.events %}
+                                {% if forloop.last %} {{event.name}}
+                                {%else%} {{event.name}}<br>
+                                {% endif %}
+                                {% empty %} no events {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid p-0 m-0">
+                    <div class="row flex-nowrap p-0 m-0">
+                        <div class='col p-0 m-0 mwidth'>
+                            <div class="container-fluid m-0 p-0 mwidth">
+                                <div class="row flex-nowrap p-0 m-0 mwidth">
+                                    <div class='col topRow' style='min-width: 4em;'>
+                                        Day
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid p-0 m-0 mwidth" id="dates"></div>
+                        </div>
+
+                        <div class='col-11 p-0 m-0'>
+                            <div class="table-responsive p-0 m-0" id="scrollMark" >
+                                <div class ="container-fluid p-0 m-0" id="rowheader"></div>
+                                <div class ="container-fluid p-0 m-0" id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dcenter rounded">
+                    <button class="btn btn-primary btn-lg header mt-3" type="button" id="forwardButton" style="background-color:#c7974b;">👇</button>
+                </div>
+
+                <div class="dcenter rounded">
+                    <button class="btn btn-primary btn-lg header" type="button" id="backTop" style="background-color:#c7974b;">Back to top</button>
+                </div>
+
+                <div id="eventModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header" id='modalHeader'>
+                        </div>
+                        <div class='modal-body' id='modalMain'>
+                        </div>
+                        <div class ='modal-footer'>
+                            <div>
+                            <span class="closeBtnFooter">Close</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="{% static 'en/calendar/main.js' %}"></script>
+                <script src="{% static 'en/calendar/modal.js' %}"></script>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
